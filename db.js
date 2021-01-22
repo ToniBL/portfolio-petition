@@ -8,6 +8,7 @@ const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition");
 module.exports.addSupporter = (firstname, lastname, signature) => {
     const q = `INSERT INTO signatures (first, last, signature) 
     VALUES ($1, $2, $3);`;
+    //add RETURNING id, so id can be stored in req.session.signatureId
     const params = [firstname, lastname, signature];
     return db.query(q, params);
 };
