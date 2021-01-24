@@ -3,16 +3,18 @@ const app = express();
 const db = require("./db");
 const cookieSession = require("cookie-session");
 const hb = require("express-handlebars");
+const csurf = require("csurf");
+const secrets = require("./secrets.json");
 
 app.engine("handlebars", hb({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-// app.use(
-//     cookieSession({
-//         secret: secrets.sessionSecret,
-//         maxAge: 1000 * 60 * 60 * 24 * 14,
-//     })
-// );
+app.use(
+    cookieSession({
+        secret: secrets.sessionSecret,
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+    })
+);
 app.use(express.urlencoded({ extended: false }));
 app.use(csurf());
 app.use(function (req, res, next) {
@@ -27,9 +29,9 @@ app.use(function (req, res, next) {
 app.use(express.static("./public"));
 
 app.get("/petition", (req, res) => {
-    if (req.cookies.signed) {
-        //req.session.signatureId = true
-        //res.redirect("/thanks");
+    //console.log(req.session.signatureId);
+    if (req.session.signatureId) {
+        res.redirect("/thanks");
     } else {
         res.render("petition", {
             layout: "main",
@@ -40,13 +42,16 @@ app.get("/petition", (req, res) => {
 
 app.post("/petition", (req, res) => {
     const errInAddSupporter = true;
-    console.log("req.body:", req.body);
+    //   console.log("req.body:", req.body);
 
     db.addSupporter(req.body.firstname, req.body.lastname, req.body.signature)
-        .then(() => {
-            console.log("Supporter added");
-            // req.session.signatureId = results.rows[0].id
-            // res.redirect("/thanks");
+        .then(({ rows }) => {
+            // console.log("id:", rows[0].id);
+            // console.log("Supporter added");
+
+            req.session.signatureId = rows[0].id;
+            res.redirect("/thanks");
+            return;
         })
         .catch((err) => {
             console.log("err in addSupporter", err);
@@ -54,24 +59,44 @@ app.post("/petition", (req, res) => {
                 errInAddSupporter,
             });
         });
-    res.redirect("/petition"); // this needs to be redirect to thank you, redirects to petition oly for testing purpose
 });
 
 app.get("/thanks", (req, res) => {
-    // if (req.session.signatureId)
-    // pull id out of req.session.signatureId and write a function that does a query to find the signature by id in db
-    res.render("thanks", {
-        layout: "main",
-        title: "thanks",
-    });
-    // else {
-    //      res.redirect("/petition)
-    // }
+    if (!req.session.signatureId) {
+        res.redirect("/petition");
+    } else if (req.session.signatureId) {
+        db.findSignature(req.session.signatureId)
+            .then((signature) => {
+                // console.log("signature:", signature.rows[0].signature);
+                res.render("thanks", {
+                    layout: "main",
+                    title: "thanks",
+                    signature: signature.rows[0].signature,
+                });
+            })
+            .catch((err) => {
+                console.log("Error in getThanks:", err);
+            });
+    }
 });
 
 app.get("/signers", (req, res) => {
-    // if (req.session.signatureId == false)
-    res.redirect("/petition");
+    if (req.session.SignatureId) {
+        db.listSupporter()
+            .then((result) => {
+                console.log("result.rows:", result.rows);
+                res.render("signers", {
+                    title: "signers",
+                    layout: "main",
+                    listSupporter: result.rows,
+                });
+            })
+            .catch((err) => {
+                console.log("error in listSupporters:", err);
+            });
+    } else {
+        res.redirect("/petition");
+    }
 });
 
 app.listen(8080, () => console.log("petition server lisening"));
