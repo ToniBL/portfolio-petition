@@ -5,26 +5,34 @@ const spicedPg = require("spiced-pg");
 const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition");
 // last part of path = name of databank -> create a new databank
 
-module.exports.addSupporter = (firstname, lastname, signature) => {
+module.exports.addSignature = (signature) => {
     //console.log(firstname, lastname, signature);
-    const q = `INSERT INTO signatures (first, last, signature) 
-    VALUES ($1, $2, $3)
+    const q = `INSERT INTO signatures (signature) 
+    VALUES ($1)
     RETURNING id
     `;
-    const params = [firstname, lastname, signature];
+    const params = [signature];
     return db.query(q, params);
 };
 
 module.exports.findSignature = (signature) => {
-    const q = `SELECT signature FROM signatures WHERE id = ($1)`;
+    const q = `SELECT signature FROM signatures WHERE id = $1`;
     const params = [signature];
     return db.query(q, params);
 };
 
 module.exports.listSupporter = () => {
-    const q = `SELECT firstname, lastname FROM signatures`;
+    const q = `SELECT first, last FROM signatures`;
     console.log(q);
     //VALUES ($1, $2)`;
-    //const params = [firstname, lastname];
+    // const params = [first, last];
     return db.query(q);
+};
+
+module.exports.registerUser = (firstname, lastname, email, safePw) => {
+    const q = `INSERT INTO users (first, last, email, password)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id`;
+    const params = [firstname, lastname, email, safePw];
+    return db.query(q, params);
 };

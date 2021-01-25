@@ -5,10 +5,12 @@ const cookieSession = require("cookie-session");
 const hb = require("express-handlebars");
 const csurf = require("csurf");
 const secrets = require("./secrets.json");
+const { hash, compare } = require("./bc");
 
 app.engine("handlebars", hb({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
+// -- MIDDLEWARE
 app.use(
     cookieSession({
         secret: secrets.sessionSecret,
@@ -28,6 +30,62 @@ app.use(function (req, res, next) {
 
 app.use(express.static("./public"));
 
+// -- ROUTES
+
+// -- CREATE USER
+app.get("/register", (req, res) => {
+    if (!req.session.userId) {
+        res.render("register", {
+            layout: "main",
+            title: "register",
+        });
+    } else if (req.session.userId && req.session.signatureId) {
+        res.redirect("/thanks");
+    } else if (req.sessions.userId) {
+        res.redirect("/petition");
+    }
+});
+
+app.post("/register", (req, res) => {
+    hash(req.body.password)
+        .then((hashedPw) => {
+            console.log("hashedPw in register:", hashedPw);
+
+            return db.registerUser(
+                req.body.firstname,
+                req.body.lastname,
+                req.body.email,
+                hashedPw
+            );
+        })
+        .then((result) => {
+            console.log("result.rows[0].id:", result.rows[0].id);
+            req.sessions.userId = result.rows[0].id;
+        })
+        .catch((err) => console.log("err in registerUser:", err));
+    const errInRegister = true;
+    return res.render("/register", {
+        layout: "main",
+        title: "register",
+        errInRegister,
+    });
+    console.log("nach promise");
+    res.redirect("/petition");
+});
+
+app.get("/login", (req, res) => {
+    if (req.session.userId) {
+        res.render("login", {
+            layout: "main",
+            title: "login",
+        });
+    } else if (!req.session.userId) {
+        res.redirect("/register");
+    } else if (req.session.userId && req.session.signatureId) {
+        res.redirect("/thanks");
+    }
+});
+
 app.get("/petition", (req, res) => {
     //console.log(req.session.signatureId);
     if (req.session.signatureId) {
@@ -40,26 +98,27 @@ app.get("/petition", (req, res) => {
     }
 });
 
-app.post("/petition", (req, res) => {
-    const errInAddSupporter = true;
-    //   console.log("req.body:", req.body);
+// app.post("/petition", (req, res) => {
+//     //   console.log("req.body:", req.body);
 
-    db.addSupporter(req.body.firstname, req.body.lastname, req.body.signature)
-        .then(({ rows }) => {
-            // console.log("id:", rows[0].id);
-            // console.log("Supporter added");
+//     db.addSignature(req.body.signature)
+//         .then(({ rows }) => {
+//             // console.log("id:", rows[0].id);
+//             // console.log("Supporter added");
 
-            req.session.signatureId = rows[0].id;
-            res.redirect("/thanks");
-            return;
-        })
-        .catch((err) => {
-            console.log("err in addSupporter", err);
-            res.redirect("/petition", {
-                errInAddSupporter,
-            });
-        });
-});
+//             req.session.signatureId = rows[0].id;
+//             res.redirect("/thanks");
+//             return;
+//         })
+//         .catch((err) => {
+//             console.log("err in addSignature", err);
+//             const errInAddSupporter = true;
+//             res.render("/petition", {
+//                 title: "petition",
+//                 errInAddSignature,
+//             });
+//         });
+// });
 
 app.get("/thanks", (req, res) => {
     if (!req.session.signatureId) {
@@ -67,11 +126,11 @@ app.get("/thanks", (req, res) => {
     } else if (req.session.signatureId) {
         db.findSignature(req.session.signatureId)
             .then((signature) => {
-                // console.log("signature:", signature.rows[0].signature);
+                console.log("signature:", signature);
                 res.render("thanks", {
                     layout: "main",
                     title: "thanks",
-                    signature: signature.rows[0].signature,
+                    //  signature: signature.rows[0].signature,
                 });
             })
             .catch((err) => {
@@ -80,12 +139,13 @@ app.get("/thanks", (req, res) => {
     }
 });
 
+//
 app.get("/signers", (req, res) => {
-    if (req.session.SignatureId) {
-        db.listSupporter()
+    if (req.session.signatureId) {
+        db.listSupporter(req.session.signatureId)
             .then((result) => {
                 console.log("result.rows:", result.rows);
-                res.render("signers", {
+                return res.render("signers", {
                     title: "signers",
                     layout: "main",
                     listSupporter: result.rows,
@@ -99,7 +159,7 @@ app.get("/signers", (req, res) => {
     }
 });
 
-app.listen(8080, () => console.log("petition server lisening"));
+app.listen(8080, () => console.log("petition server listening"));
 
 //function from class to get data from db
 // app.get("/actors", (rq, res) => {

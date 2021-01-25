@@ -1,0 +1,12 @@
+<h1>Please register to join the campaign</h1>
+
+<form id="form" method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
+            <label for='firstname'>Firstname</label><input type='text' name='firstname' placeholder='First Name' autocomplete='off'>
+            <label for='Lastname'>Lastname</label><input type='text' name='lastname' placeholder='Last Name' autocomplete='off'>
+            <label for='email'>Email Address</label><input type='email' name='email' placeholder='Email Address' autocomplete='off'>
+            <label for='password'>Password</label><input type='password' name='password' placeholder='Password' autocomplete='off'>
+             <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        <button> Sign up  </button>
+        </form>
+
+      {{#if errInRegister}} <p>Whoops! Something went wrong, please try again</p> {{/if}}
