@@ -5,13 +5,13 @@ const spicedPg = require("spiced-pg");
 const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition");
 // last part of path = name of databank -> create a new databank
 
-module.exports.addSignature = (signature) => {
+module.exports.addSignature = (signature, userId) => {
     //console.log(firstname, lastname, signature);
-    const q = `INSERT INTO signatures (signature) 
-    VALUES ($1)
+    const q = `INSERT INTO signatures (signature, user_id) 
+    VALUES ($1, $2)
     RETURNING id
     `;
-    const params = [signature];
+    const params = [signature, userId];
     return db.query(q, params);
 };
 
@@ -22,17 +22,23 @@ module.exports.findSignature = (signature) => {
 };
 
 module.exports.listSupporter = () => {
-    const q = `SELECT first, last FROM signatures`;
+    const q = `SELECT first, last FROM users`;
     console.log(q);
     //VALUES ($1, $2)`;
     // const params = [first, last];
     return db.query(q);
 };
 
-module.exports.registerUser = (firstname, lastname, email, safePw) => {
+module.exports.registerUser = (firstname, lastname, email, password) => {
     const q = `INSERT INTO users (first, last, email, password)
     VALUES ($1, $2, $3, $4)
     RETURNING id`;
-    const params = [firstname, lastname, email, safePw];
+    const params = [firstname, lastname, email, password];
+    return db.query(q, params);
+};
+
+module.exports.loginUser = (email) => {
+    const q = `SELECT * FROM users WHERE email = $1`;
+    const params = [email];
     return db.query(q, params);
 };
