@@ -8,6 +8,8 @@ const db = spicedPg(
 );
 // last part of path = name of databank -> create a new databank
 
+// ADD & FIND SIGNATURE
+
 module.exports.addSignature = (signature, userId) => {
     //console.log(firstname, lastname, signature);
     const q = `INSERT INTO signatures (signature, user_id) 
@@ -19,18 +21,37 @@ module.exports.addSignature = (signature, userId) => {
 };
 
 module.exports.findSignature = (signature) => {
-    const q = `SELECT signature FROM signatures WHERE id = $1`;
+    const q = `SELECT * FROM signatures WHERE id = $1`;
     const params = [signature];
     return db.query(q, params);
 };
 
-module.exports.listSupporter = () => {
-    const q = `SELECT first, last FROM users`;
-    // console.log(q);
-    //VALUES ($1, $2)`;
-    // const params = [first, last];
+// LISTS OF SUPPORTER
+
+module.exports.listSupporter = (first, last, age, city, url, userId) => {
+    const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url 
+    FROM users
+    JOIN users 
+    ON signatures.user_id = user.id 
+    JOIN user_profiles ON user.id = user_profiles.user_id`;
+    // const params = [first, last, age, city, url, userId];
+    // // console.log(q);
+    // //VALUES ($1, $2)`;
+    // // const params = [first, last];
     return db.query(q);
 };
+
+module.exports.signersCity = () => {
+    const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url 
+    FROM users
+    JOIN users 
+    ON signatures.user_id = user.id 
+    JOIN user_profiles ON user.id = user_profiles.user_id
+    WHERE LOWER (city) = LOWER ($1)`;
+    return db.query(q);
+};
+
+// REGISTRATION & LOGIN
 
 module.exports.registerUser = (firstname, lastname, email, password) => {
     const q = `INSERT INTO users (first, last, email, password)
@@ -45,6 +66,8 @@ module.exports.loginUser = (email) => {
     const params = [email];
     return db.query(q, params);
 };
+
+// PROFILE & EDIT
 
 module.exports.addProfile = (age, city, url, userId) => {
     const q = `INSERT INTO user_profiles (age, city, url, user_id)

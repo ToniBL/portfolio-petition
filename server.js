@@ -190,10 +190,10 @@ app.get("/thanks", (req, res) => {
     }
 });
 
-// -- signers
+// -- Signers
 app.get("/signers", (req, res) => {
     if (req.session.signatureId) {
-        db.listSupporter(req.session.signatureId)
+        db.listSupporter()
             .then((result) => {
                 console.log("result.rows:", result.rows);
                 return res.render("signers", {
@@ -203,7 +203,7 @@ app.get("/signers", (req, res) => {
                 });
             })
             .catch((err) => {
-                console.log("error in listSupporters:", err);
+                console.log("error in listSupporter:", err);
             });
     } else {
         res.redirect("/petition");
