@@ -4,7 +4,13 @@ const db = require("./db");
 const cookieSession = require("cookie-session");
 const hb = require("express-handlebars");
 const csurf = require("csurf");
-const secrets = require("./secrets.json");
+let cookie_sec;
+if (process.env.cookie_secret) {
+    // we are in production
+    cookie_sec = process.env.cookie_secret;
+} else {
+    cookie_sec = require("./secrets.json").cookie_secret;
+}
 const { hash, compare } = require("./bc");
 
 app.engine("handlebars", hb({ defaultLayout: "main" }));
