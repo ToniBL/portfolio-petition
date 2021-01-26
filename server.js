@@ -9,7 +9,7 @@ if (process.env.cookie_secret) {
     // we are in production
     cookie_sec = process.env.cookie_secret;
 } else {
-    cookie_sec = require("./secrets.json");
+    cookie_sec = require("./secrets.json").sessionSecret;
 }
 const { hash, compare } = require("./bc");
 
@@ -19,7 +19,7 @@ app.set("view engine", "handlebars");
 // -- MIDDLEWARE
 app.use(
     cookieSession({
-        secret: cookie_sec.sessionSecret,
+        secret: cookie_sec,
         maxAge: 1000 * 60 * 60 * 24 * 14,
     })
 );
@@ -79,6 +79,15 @@ app.post("/register", (req, res) => {
             });
         });
     //console.log("nach promise");
+});
+
+// --PROFILE
+
+app.get("profile", (req, res) => {
+    res.render("profile", {
+        layout: "main",
+        title: "profile",
+    });
 });
 
 // // --LOGIN
