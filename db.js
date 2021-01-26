@@ -2,7 +2,10 @@
 // spiced-pg for communication between node and postgres
 
 const spicedPg = require("spiced-pg");
-const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition");
+const db = spicedPg(
+    process.env.DATABASE_URL ||
+        `postgres:postgres:postgres@localhost:5432/petition`
+);
 // last part of path = name of databank -> create a new databank
 
 module.exports.addSignature = (signature, userId) => {
@@ -40,5 +43,13 @@ module.exports.registerUser = (firstname, lastname, email, password) => {
 module.exports.loginUser = (email) => {
     const q = `SELECT * FROM users WHERE email = $1`;
     const params = [email];
+    return db.query(q, params);
+};
+
+module.exports.addProfile = (age, city, url, userId) => {
+    const q = `INSERT INTO user_profiles (age, city, url, user_id)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id`;
+    const params = [age, city, url, userId];
     return db.query(q, params);
 };

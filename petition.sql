@@ -30,5 +30,4 @@ id SERIAL PRIMARY KEY,
 age INT, 
 city VARCHAR(100),
 url VARCHAR(300),
-user_id INT REFERENCES users(id) NOT NULL UNIQUE (--unique means they can only have 1 row)
-);
+user_id INT REFERENCES users(id) NOT NULL UNIQUE);

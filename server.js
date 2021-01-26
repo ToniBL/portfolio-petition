@@ -67,7 +67,8 @@ app.post("/register", (req, res) => {
         .then((result) => {
             console.log("result.rows[0].id:", result.rows[0].id);
             req.session.userId = result.rows[0].id;
-            return res.redirect("/petition");
+            // return res.redirect("/petition");
+            return res.redirect("/profile");
         })
         .catch((err) => {
             console.log("err in registerUser:", err);
@@ -83,11 +84,21 @@ app.post("/register", (req, res) => {
 
 // --PROFILE
 
-app.get("profile", (req, res) => {
+app.get("/profile", (req, res) => {
     res.render("profile", {
         layout: "main",
         title: "profile",
     });
+});
+
+app.post("/profile", (req, res) => {
+    db.addProfile(req.body.age, req.body.city, req.body.url, req.session.userId)
+        .then((result) => {
+            res.redirect("/petition");
+        })
+        .catch((err) => {
+            console.log("err in addProfile:", err);
+        });
 });
 
 // // --LOGIN
@@ -103,25 +114,24 @@ app.post("/login", (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    // here call db.loginUser function
-    // compare password & hashed db pw
     db.loginUser(req.body.email).then((result) => {
         //  console.log("result:", result);
         let hashedPw = result.rows[0].password;
-        compare(password, hashedPw)
+        return compare(password, hashedPw)
             .then((match) => {
                 console.log("match value from compare:", match);
                 if (match == true) {
                     req.session.userId = result.rows[0].id;
-                    return res.redirect("/petition");
+                    res.redirect("/petition");
+                } else {
+                    res.render("login", {
+                        layout: "main",
+                        title: "login",
+                        errLogin,
+                    });
                 }
             })
             .catch((err) => console.log("err in compare:", err));
-        res.render("login", {
-            layout: "main",
-            title: "login",
-            errLogin,
-        });
     });
 });
 
@@ -180,7 +190,7 @@ app.get("/thanks", (req, res) => {
     }
 });
 
-//
+// -- signers
 app.get("/signers", (req, res) => {
     if (req.session.signatureId) {
         db.listSupporter(req.session.signatureId)

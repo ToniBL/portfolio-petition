@@ -1,0 +1,12 @@
+<h1>We'd like to get you to know a little better. Please create a profile</h1>
+
+<form id="form" method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
+            <label for='age'>Age</label><input type='text' name='age' placeholder='' autocomplete='off'>
+            <label for='city'>City</label><input type='text' name='city' placeholder='' autocomplete='off'>
+            <label for='url'>Homepage</label><input type='url' name='url' placeholder='' autocomplete='off'>
+            
+             <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        <button> Sign up  </button>
+        </form>
+
+      {{!-- {{#if errInRegister}} <p>Whoops! Something went wrong, please try again</p> {{/if}} --}}
