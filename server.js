@@ -9,7 +9,7 @@ if (process.env.cookie_secret) {
     // we are in production
     cookie_sec = process.env.cookie_secret;
 } else {
-    cookie_sec = require("./secrets.json").cookie_secret;
+    cookie_sec = require("./secrets.json");
 }
 const { hash, compare } = require("./bc");
 
@@ -19,7 +19,7 @@ app.set("view engine", "handlebars");
 // -- MIDDLEWARE
 app.use(
     cookieSession({
-        secret: secrets.sessionSecret,
+        secret: cookie_sec.sessionSecret,
         maxAge: 1000 * 60 * 60 * 24 * 14,
     })
 );
