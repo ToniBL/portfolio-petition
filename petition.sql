@@ -22,4 +22,4 @@ CREATE TABLE signatures(
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     
-    SELECT * FROM users;
+   

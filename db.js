@@ -23,7 +23,7 @@ module.exports.findSignature = (signature) => {
 
 module.exports.listSupporter = () => {
     const q = `SELECT first, last FROM users`;
-    console.log(q);
+    // console.log(q);
     //VALUES ($1, $2)`;
     // const params = [first, last];
     return db.query(q);
