@@ -1,0 +1,14 @@
+<h1>Any changes in your life you would like us to know about? Edit your profile below</h1>
+
+<form id="form" method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
+            <label for='firstname'>Firstname</label><input type='text' name='firstname' placeholder='' autocomplete='off'>
+            <label for='Lastname'>Lastname</label><input type='text' name='lastname' placeholder='' autocomplete='off'>
+            <label for='email'>Email Address</label><input type='email' name='email' placeholder='' autocomplete='off'>
+            <label for='password'>Password</label><input type='password' name='password' placeholder='Password' autocomplete='off'>
+            <label for='age'>Age</label><input type='text' name='age' placeholder='' autocomplete='off'>
+            <label for='city'>City</label><input type='text' name='city' placeholder='' autocomplete='off'>
+            <label for='url'>Homepage</label><input type='url' name='url' placeholder='' autocomplete='off'>
+            
+             <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        <button> Sign up  </button>
+        </form>

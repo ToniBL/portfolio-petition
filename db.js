@@ -31,9 +31,10 @@ module.exports.findSignature = (signature) => {
 module.exports.listSupporter = (first, last, age, city, url, userId) => {
     const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url 
     FROM users
-    JOIN users 
-    ON signatures.user_id = user.id 
-    JOIN user_profiles ON user.id = user_profiles.user_id`;
+    JOIN signatures
+    ON users.id = signatures.user_id
+    JOIN user_profiles 
+    ON users.id = user_profiles.user_id`;
     // const params = [first, last, age, city, url, userId];
     // // console.log(q);
     // //VALUES ($1, $2)`;
@@ -41,14 +42,16 @@ module.exports.listSupporter = (first, last, age, city, url, userId) => {
     return db.query(q);
 };
 
-module.exports.signersCity = () => {
+module.exports.signersCity = (city) => {
     const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url 
-    FROM users
-    JOIN users 
-    ON signatures.user_id = user.id 
-    JOIN user_profiles ON user.id = user_profiles.user_id
+    FROM signatures
+    JOIN users
+    ON users.id = signatures.user_id
+    LEFT JOIN user_profiles 
+    ON users.id = user_profiles.user_id
     WHERE LOWER (city) = LOWER ($1)`;
-    return db.query(q);
+    const params = [city];
+    return db.query(q, params);
 };
 
 // REGISTRATION & LOGIN
@@ -76,3 +79,5 @@ module.exports.addProfile = (age, city, url, userId) => {
     const params = [age, city, url, userId];
     return db.query(q, params);
 };
+
+//exports.editProfile = ()

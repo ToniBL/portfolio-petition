@@ -85,14 +85,23 @@ app.post("/register", (req, res) => {
 // --PROFILE
 
 app.get("/profile", (req, res) => {
-    res.render("profile", {
-        layout: "main",
-        title: "profile",
-    });
+    if (req.session.userId) {
+        res.render("profile", {
+            layout: "main",
+            title: "profile",
+        });
+    } else {
+        res.redirect("/register");
+    }
 });
 
 app.post("/profile", (req, res) => {
-    db.addProfile(req.body.age, req.body.city, req.body.url, req.session.userId)
+    db.addProfile(
+        +req.body.age,
+        req.body.city,
+        req.body.url,
+        req.session.userId
+    )
         .then((result) => {
             res.redirect("/petition");
         })
@@ -100,6 +109,8 @@ app.post("/profile", (req, res) => {
             console.log("err in addProfile:", err);
         });
 });
+
+app.get("/edit", (req, res) => {});
 
 // // --LOGIN
 app.get("/login", (req, res) => {
@@ -122,7 +133,14 @@ app.post("/login", (req, res) => {
                 console.log("match value from compare:", match);
                 if (match == true) {
                     req.session.userId = result.rows[0].id;
-                    res.redirect("/petition");
+                    db.findSignature(req.session.userId).then((result) => {
+                        console.log("result findSignature:", result);
+                        if (result.rows.signature) {
+                            res.redirect("/thanks");
+                        } else {
+                            res.redirect("/petition");
+                        }
+                    });
                 } else {
                     res.render("login", {
                         layout: "main",
@@ -139,7 +157,7 @@ app.post("/login", (req, res) => {
 
 app.get("/petition", (req, res) => {
     //console.log(req.session.signatureId);
-    if (req.session.signatureId) {
+    if (req.session.signatureId && req.session.userId) {
         res.redirect("/thanks");
     } else {
         res.render("petition", {
@@ -195,7 +213,7 @@ app.get("/signers", (req, res) => {
     if (req.session.signatureId) {
         db.listSupporter()
             .then((result) => {
-                console.log("result.rows:", result.rows);
+                //  console.log("result.rows:", result.rows);
                 return res.render("signers", {
                     title: "signers",
                     layout: "main",
@@ -204,6 +222,26 @@ app.get("/signers", (req, res) => {
             })
             .catch((err) => {
                 console.log("error in listSupporter:", err);
+            });
+    } else {
+        res.redirect("/petition");
+    }
+});
+
+app.get("/signers/:city", (req, res) => {
+    if (req.session.signatureId) {
+        db.signersCity(req.params.city)
+            .then((result) => {
+                console.log("result SignersCity:", result);
+                console.log("result.rows:", result.rows);
+                return res.render("signersCity", {
+                    title: req.params.city,
+                    layout: "main",
+                    listSupporter: result.rows,
+                });
+            })
+            .catch((err) => {
+                console.log("err in signersCity:", err);
             });
     } else {
         res.redirect("/petition");
