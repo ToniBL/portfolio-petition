@@ -203,10 +203,11 @@ app.post("/login", (req, res) => {
                         }
                     });
                 } else {
+                    const errInLogin = true;
                     res.render("login", {
                         layout: "main",
                         title: "login",
-                        errLogin,
+                        errInLogin,
                     });
                 }
             })
@@ -312,6 +313,13 @@ app.get("/signers/:city", requireSignature, (req, res) => {
         .catch((err) => {
             console.log("err in signersCity:", err);
         });
+});
+
+app.get("/logout", (req, res) => {
+    res.render("logout", {
+        title: "logout",
+        layout: "main",
+    });
 });
 
 app.listen(process.env.PORT || 8080, () =>

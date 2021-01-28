@@ -56,12 +56,24 @@ h3 {
     margin: 2px;
 }
 
+.petition--unsign {
+    width: 130px;
+    border: solid 1px #dbd9db;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 2px;
+}
+
 .petition--signup:hover {
     background-color: darkgrey;
 }
 
+.petition--unsign:hover {
+    background-color: darkgrey;
+}
+
 .alert {
-    background-color: red;
+    background-color: rgba(230, 144, 144, 0.7);
     color: white;
     width: 355px;
     margin: 0 auto;

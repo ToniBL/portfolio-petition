@@ -1,11 +1,21 @@
-<h1>Please Log in to proceed</h1>
+<div id="background">
+<section id="register">
 
-<form id="form" method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
-            <label for='email'>Email Address</label>
-            <input type='email' name='email' placeholder='Email Address' autocomplete='off'>
-            <label for='password'>Password</label><input type='password' name='password' placeholder='Password' autocomplete='off'>
-             <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                        <button> login </button>
-        </form>
 
-      {{#if errInLogin}} <p>Whoops! Something went wrong, please try again</p> {{/if}}
+<h1>Please Log in</h1>
+
+<form id="form" method='POST' >
+  <label for='email'></label>
+  <input class="petition--input" type='email' name='email' placeholder='Email Address' autocomplete='off'>
+  
+  <label for='password'></label>
+  <input class="petition--input"type='password' name='password' placeholder='Password' autocomplete='off'>
+
+  <input type="hidden" name="_csrf" value="{{csrfToken}}">
+  
+  <button class="petition--signup"> login </button>
+  </form>
+
+    {{#if errInLogin}} <p>Whoops! Something went wrong, please try again</p> {{/if}}
+    </section>
+    </div>
