@@ -1,11 +1,12 @@
-<h1>This is a list of all Supporters</h1>
+<h1>This is a list of all Supporters. If youlike to see, who else in your city signed just click on the city.</h1>
 
 <div class="listSupporter">
 {{#listSupporter}}
-<p><a href="{{url}}" target="_blank">
+<p><a href="{{url}}" >
      {{first}} {{last}}
 </a> {{age}}
-<a href="/signers/{{city}}" target="_blank"> {{city}}</a></p>
+<a href="/signers/{{city}}" > {{city}}</a></p>
 {{/listSupporter}}
 
+<a href="/logout"> <button>logout</button> </a>
 </div>

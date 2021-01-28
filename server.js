@@ -65,7 +65,7 @@ app.post("/register", (req, res) => {
             );
         })
         .then((result) => {
-            console.log("result.rows[0].id:", result.rows[0].id);
+            // console.log("result.rows[0].id:", result.rows[0].id);
             req.session.userId = result.rows[0].id;
             // return res.redirect("/petition");
             return res.redirect("/profile");
@@ -110,7 +110,35 @@ app.post("/profile", (req, res) => {
         });
 });
 
-app.get("/edit", (req, res) => {});
+app.get("/edit", (req, res) => {
+    db.prefillProfile(req.session.userId)
+        .then((result) => {
+            console.log("result.rows:", result.rows);
+            res.render("edit", {
+                title: "edit",
+                layout: "main",
+                profile: result.rows,
+            });
+        })
+        .catch((err) => {
+            console.log("Error in get edit", err);
+        });
+});
+
+// app.post("/edit", (req, res) => {
+//     if (req.body.password != undefined) {
+//         hash(req.body.password).then((hashedPw) => {
+//             // console.log("hashedPw in register:", hashedPw);
+
+//             return db.registerUser(
+//                 req.body.firstname,
+//                 req.body.lastname,
+//                 req.body.email,
+//                 hashedPw
+//             );
+//         }).then;
+//     }
+// });
 
 // // --LOGIN
 app.get("/login", (req, res) => {

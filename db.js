@@ -80,4 +80,30 @@ module.exports.addProfile = (age, city, url, userId) => {
     return db.query(q, params);
 };
 
-//exports.editProfile = ()
+module.exports.prefillProfile = (userId) => {
+    const q = `SELECT users.id, users.first, users.last, users.email, user_profiles.age, user_profiles.city, user_profiles.url
+    FROM users
+    LEFT JOIN user_profiles
+    ON users.id = user_profiles.user_id
+    WHERE users.id = $1`;
+    const params = [userId];
+    return db.query(q, params);
+};
+
+module.exports.editUserPw = (userId, first, last, email, password) => {
+    const q = `UPDATE users
+   SET first = $2, last =$3, email = $4, password = $5
+   WHERE id = $1`;
+    const params = [userId, first, last, email, password];
+    return db.query(q, params);
+};
+
+module.exports.editUserNoPw = (userId, first, last, email) => {
+    const q = `UPDATE users
+   SET first = $2, last =$3, email = $4, 
+   WHERE id = $1`;
+    const params = [userId, first, last, email];
+    return db.query(q, params);
+};
+
+module.exports.upsertProfile = () => {};
