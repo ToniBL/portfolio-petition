@@ -92,18 +92,25 @@ module.exports.prefillProfile = (userId) => {
 
 module.exports.editUserPw = (userId, first, last, email, password) => {
     const q = `UPDATE users
-   SET first = $2, last =$3, email = $4, password = $5
-   WHERE id = $1`;
-    const params = [userId, first, last, email, password];
+   SET first = $1, last =$2, email = $3, password = $4
+   WHERE id = $5`;
+    const params = [first, last, email, password, userId];
     return db.query(q, params);
 };
 
 module.exports.editUserNoPw = (userId, first, last, email) => {
     const q = `UPDATE users
-   SET first = $2, last =$3, email = $4, 
-   WHERE id = $1`;
-    const params = [userId, first, last, email];
+   SET first = $1, last =$2, email = $3 
+   WHERE id = $4`;
+    const params = [first, last, email, userId];
     return db.query(q, params);
 };
 
-module.exports.upsertProfile = () => {};
+module.exports.upsertProfile = (userId, age, city, url) => {
+    const q = `INSERT INTO user_profiles (user_id, age, city, url)
+    VALUES ($1, $2, $3, $4)
+    ON CONFLICT (user_id)
+    DO UPDATE SET user_id=$1, age=$2, city=$3, url=$4 `;
+    const params = [userId, age, city, url];
+    return db.query(q, params);
+};

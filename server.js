@@ -125,20 +125,48 @@ app.get("/edit", (req, res) => {
         });
 });
 
-// app.post("/edit", (req, res) => {
-//     if (req.body.password != undefined) {
-//         hash(req.body.password).then((hashedPw) => {
-//             // console.log("hashedPw in register:", hashedPw);
+app.post("/edit", (req, res) => {
+    if (req.body.password) {
+        hash(req.body.password)
+            .then((hashedPw) => {
+                // console.log("hashedPw in register:", hashedPw);
 
-//             return db.registerUser(
-//                 req.body.firstname,
-//                 req.body.lastname,
-//                 req.body.email,
-//                 hashedPw
-//             );
-//         }).then;
-//     }
-// });
+                return db.editUserPw(
+                    req.session.userId,
+                    req.body.firstname,
+                    req.body.lastname,
+                    req.body.email,
+                    hashedPw
+                );
+            })
+            .then(() => {
+                console.log("edit ran");
+                res.redirect("/thanks");
+            })
+            .catch((err) => {
+                console.log("error in editUserPw", err);
+            });
+    } else {
+        db.editUserNoPw(
+            req.session.userId,
+            req.body.firstname,
+            req.body.lastname,
+            req.body.email
+        );
+        db.upsertProfile(
+            req.session.userId,
+            req.body.age,
+            req.body.city,
+            req.body.url
+        )
+            .then(() => {
+                res.redirect("/thanks");
+            })
+            .catch((err) => {
+                console.log("error in upsert or editUserNoPw", err);
+            });
+    }
+});
 
 // // --LOGIN
 app.get("/login", (req, res) => {
@@ -184,7 +212,7 @@ app.post("/login", (req, res) => {
 // -- PETITION
 
 app.get("/petition", (req, res) => {
-    //console.log(req.session.signatureId);
+    console.log(req.session.signatureId);
     if (req.session.signatureId && req.session.userId) {
         res.redirect("/thanks");
     } else {
