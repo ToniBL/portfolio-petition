@@ -1,12 +1,23 @@
-<h1>We'd like to get you to know a little better. Please create a profile</h1>
 
-<form id="form" method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
-            <label for='age'>Age</label><input type='text' name='age' placeholder='' autocomplete='off'>
-            <label for='city'>City</label><input type='text' name='city' placeholder='' autocomplete='off'>
-            <label for='url'>Homepage</label><input type='url' name='url' placeholder='' autocomplete='off'>
+<div id="background">
+<section id="register">
+<h1> Create a profile</h1>
+<p>We'd like to get to know you a bit better!</p>
+
+<form id="form" method='POST'>
+            <label for='age'></label>
+            <input class="petition--input" type='text' name='age' placeholder='Age' autocomplete='off'>
+            
+            <label for='city'></label>
+            <input class="petition--input" type='text' name='city' placeholder='City' autocomplete='off'>
+            
+            <label for='url'></label>
+            <input class="petition--input" type='url' name='url' placeholder='Homepage' autocomplete='off'>
             
              <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                        <button> Sign up  </button>
+            <button class="petition--signup">Continue</button>
         </form>
 
-      {{!-- {{#if errInRegister}} <p>Whoops! Something went wrong, please try again</p> {{/if}} --}}
+      {{!-- {{#if errInProfile}} <p>Whoops! Something went wrong, please try again</p> {{/if}} --}}
+      </section>
+      </div>

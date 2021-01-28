@@ -1,10 +1,98 @@
 body {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    background-color: rgb(185, 219, 219);
+    font-family: Helvetica;
+    background-image: url("yoav-aziz-Xaa6OU5bWBg-unsplash.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+#background {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 32px;
+    color: black;
+}
+
+#register {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+    padding: 50px;
+    background-color: rgba(255, 255, 255, 0.6);
+    width: 320px;
+    border-radius: 10px;
+}
+
+h3 {
+    margin: 2px;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+}
+
+.petition--input {
+    width: 200px;
+    border: solid 1px #dbd9db;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 2px;
+}
+
+.petition--input:hover {
+    background-color: lightgray;
+}
+
+.petition--signup {
+    width: 222px;
+    border: solid 1px #dbd9db;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 2px;
+}
+
+.petition--signup:hover {
+    background-color: darkgrey;
+}
+
+.alert {
+    background-color: red;
+    color: white;
+    width: 355px;
+    margin: 0 auto;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#login--area {
+    margin-top: 20px;
+    font-weight: bold;
 }
 
 canvas {
-    background-color: azure;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+}
+
+p {
+    font-weight: bold;
+}
+
+a:link {
+    text-decoration: none;
+    color: rgba(19, 15, 15, 0.6);
+}
+
+a:hover {
+    color: rgba(141, 119, 119, 0.6);
+    text-decoration: underline;
+}
+
+a:visited {
+    color: rgba(20, 21, 39, 0.6);
 }

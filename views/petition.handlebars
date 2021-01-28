@@ -1,13 +1,27 @@
-<h1>this is the petition Site</h1>
 
-<h2>Welcome to petition XY </h2>
-        <form id="form" method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
+<div id="background">
+<section id="register">
+
+
+<h1>Sign for a carfree Sunday! </h1>
+    <form id="form" method='POST'>
+  
+    <input name="signature" id="inputfield" type="hidden"> 
+    <label for="signature"></label>
+    <canvas id="signature" width="400" height="300">
+
+    </canvas>
+    
+
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        
+    <button class="petition--signup"> Sign </button>
+
+    </form>
             
-            <div class="canvas">
-                <input name="signature" id="inputfield" type="hidden"> <label for="signature">Signature</label><canvas id="signature" width="500" height="300"></canvas>
-            </div>
-             <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                        <button> submit </button>
-        </form>
+           
+        
 
       {{#if errInAddSignature}} <p>Whoops! Something went wrong, please try again</p> {{/if}}
+    </section>
+    </div> 

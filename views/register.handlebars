@@ -1,14 +1,29 @@
-<h1>Please register to join the campaign</h1>
 
-<form id="form" method='POST' style="display: flex; flex-direction: column; justify-content: space-between; width: 40%; height: 50%;">
-            <label for='firstname'>Firstname</label><input type='text' name='firstname' placeholder='First Name' autocomplete='off'>
-            <label for='Lastname'>Lastname</label><input type='text' name='lastname' placeholder='Last Name' autocomplete='off'>
-            <label for='email'>Email Address</label><input type='email' name='email' placeholder='Email Address' autocomplete='off'>
-            <label for='password'>Password</label><input type='password' name='password' placeholder='Password' autocomplete='off'>
-             <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                        <button> Sign up  </button>
+
+<div id="background">
+<section id="register">
+<h1>car(e) free sundays!</h1>
+<form id="form" method='POST'>
+  <h3>Register</h3>
+            <label class= "petition--label" for='firstname'></label>
+            <input class="petition--input" type='text' name='firstname' placeholder='First Name' autocomplete='off'>
+
+            <label for='Lastname'></label>
+            <input class="petition--input" type='text' name='lastname' placeholder='Last Name' autocomplete='off'>
+
+            <label for='email'></label>
+            <input class="petition--input" type='email' name='email' placeholder='Email Address' autocomplete='off'>
+
+            <label for='password'></label>
+            <input class="petition--input" type='password' name='password' placeholder='Password' autocomplete='off'>
+            
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button class="petition--signup"> Sign up  </button>
         </form>
 
-Allready have an account? <a href="/login">Login</a>
 
-      {{#if errInRegister}} <p>Whoops! Something went wrong, please try again</p> {{/if}}
+
+      {{#if errInRegister}} <p classe="alert">Whoops! Something went wrong, please try again</p> {{/if}} 
+               <div id="login--area">Allready have an account? <a href="/login">Login</a><div> 
+     </section>
+     </div>
