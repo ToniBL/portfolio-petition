@@ -5,4 +5,8 @@
 </div>
 
 <p>See who else <a href="/signers">signed</a> or <a href="/logout">logout</a></p>
-
+<form method="POST">
+<p>Changed your mind? Sorry about that! 
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button>Unsign</button> </p>
+</form>
