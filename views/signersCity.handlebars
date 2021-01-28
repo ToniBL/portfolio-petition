@@ -1,10 +1,14 @@
+<div id="background">
+     <section id="register">
 <h1>These are the people supporting our cause in your city</h1>
 
 <div class="listSupporter">
 {{#listSupporter}}
-<p><a href="{{url}}" target="_blank">
+<p>Name:<a href="{{url}}" target="_blank">
      {{first}} {{last}}
-</a> {{age}} {{city}}</p>
+</a>Age: {{age}} City: {{city}}</p>
 {{/listSupporter}}
 
+</div>
+</section>
 </div>
