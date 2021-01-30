@@ -3,10 +3,10 @@ body {
     background-image: url("yoav-aziz-Xaa6OU5bWBg-unsplash.jpg");
     background-size: cover;
     background-position: center;
-    height: 100vh;
 }
 
 #background {
+    height: 120%;
     display: flex;
     justify-content: center;
 }
@@ -103,8 +103,14 @@ a:link {
 a:hover {
     color: rgba(141, 119, 119, 0.6);
     text-decoration: underline;
+    cursor: pointer;
 }
 
 a:visited {
     color: rgba(20, 21, 39, 0.6);
+}
+
+footer {
+    text-align: center;
+    margin-top: 200px;
 }
